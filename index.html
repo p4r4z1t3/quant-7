@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Квант-7</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Квант-7 — синтезатор, драм-машина и брейк-слайсер в браузере. От техно на 128 до брейкора на 300 BPM. Без регистрации, трекеров и cookie.">
+<meta property="og:title" content="Квант-7">
+<meta property="og:description" content="Синтезатор, ритм-машина и брейк-слайсер в браузере. Режь брейки, крути ручки, делись кодом.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a0e0c">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="strip">
+    <a class="brand" href="#top"><span class="lamp red on"></span>ПОЛУТОН / КВАНТ-7</a>
+    <div class="status" aria-live="off"><span class="lamp blink on" id="hdr-led"></span>ТЕМП <b id="hdr-bpm">128</b> · ШАГ <b id="hdr-step">--</b> · БАНК <b id="hdr-bank">A</b> · <b class="mode" id="hdr-mode">ТЕХНО</b></div>
+    <nav aria-label="Разделы">
+      <a href="#break">Ритм и брейк</a>
+      <a href="#synth">Синтез</a>
+      <a href="#passport">Паспорт</a>
+      <a href="#manual">Мануал</a>
+    </nav>
+  </header>
+
+  <div class="hero" id="top">
+    <div class="matrix" id="matrix-wrap">
+      <h1 class="sr-only">Квант-7</h1>
+      <canvas id="matrix" aria-hidden="true"></canvas>
+    </div>
+    <div class="hero-sub">
+      <div>
+        <p class="lede"><b>Синтезатор, ритм-машина и брейк-слайсер.</b> От ровного техно на 128 до брейкора на 300 BPM: режь брейки на 16 кусков, ставь дроби, ломай ритм. Всё звучит прямо в браузере, без регистрации и без единого трекера.</p>
+        <div class="tags">
+          <span class="label">ГУН · ФНЧ 24 дБ/окт</span>
+          <span class="label">4 голоса ритма</span>
+          <span class="label">1 В/окт</span>
+          <span class="label">Слайсер брейков</span>
+          <span class="label">70 … 300 BPM</span>
+        </div>
+      </div>
+      <div class="cta-row">
+        <button class="cta scene" type="button" data-scene="breakcore"><span class="lamp red"></span>Брейкор · 190</button>
+        <button class="cta ghost scene" type="button" data-scene="techno"><span class="lamp"></span>Техно · 128</button>
+        <a class="cta ghost" href="#manual">Мануал</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="rack-wrap">
+  <div class="transport-bar" id="transport" aria-label="Транспорт">
+    <div class="tb-group">
+      <button class="tb-btn" id="power" type="button" aria-pressed="false"><span class="lamp" id="lamp-power"></span>Питание</button>
+      <button class="tb-btn tb-play play-btn" type="button" id="play" aria-pressed="false"><span class="lamp"></span>Старт</button>
+      <button class="tb-btn rec-btn" type="button" id="rec" aria-pressed="false" title="Запись с клавиатуры в паттерн">● Запись</button>
+    </div>
+    <div class="tb-group">
+      <div class="win slider" id="bpm" tabindex="0" role="slider" aria-label="Темп">
+        <span class="label">Темп</span>
+        <div class="seg" id="seg-bpm"></div>
+      </div>
+      <div class="win"><span class="label">Шаг</span><div class="seg amber" id="seg-step"></div></div>
+      <div class="win"><span class="label">Кусок</span><div class="seg amber" id="seg-slice"></div></div>
+      <div class="win mode-win"><span class="label">Режим</span><b class="tb-mode" id="tb-mode">ТЕХНО</b></div>
+    </div>
+    <div class="tb-group">
+      <span class="label">Банк</span>
+      <div class="banks" role="group" aria-label="Банки паттернов">
+        <button class="bank" type="button" data-bank="0" aria-pressed="true">A</button>
+        <button class="bank" type="button" data-bank="1" aria-pressed="false">B</button>
+        <button class="bank" type="button" data-bank="2" aria-pressed="false">C</button>
+        <button class="bank" type="button" data-bank="3" aria-pressed="false">D</button>
+      </div>
+    </div>
+    <div class="tb-group tb-scenes">
+      <button class="tb-btn scene hot" type="button" data-scene="breakcore"><span class="lamp red"></span>Брейкор · 190</button>
+      <button class="tb-btn scene" type="button" data-scene="techno"><span class="lamp"></span>Техно · 128</button>
+    </div>
+  </div>
+
+  <div class="device brk" id="break" aria-label="Модуль 1, ритм и брейк">
+    <span class="screws" aria-hidden="true"></span>
+    <span class="plate">Модуль 1 · <b>Ритм и брейк</b></span>
+    <span class="hazard" aria-hidden="true">Осторожно · до 300 BPM</span>
+
+    <div class="brk-top">
+      <div class="lib">
+        <span class="label">Библиотека брейков</span>
+        <div class="lib-list" id="lib" role="group" aria-label="Библиотека брейков"></div>
+        <label class="btn file" for="brk-file">+ Свой сэмпл</label>
+        <input type="file" id="brk-file" accept="audio/*" class="sr-only">
+      </div>
+      <div class="brk-view">
+        <canvas id="brk-wave" aria-hidden="true"></canvas>
+        <div class="brk-meta"><span id="brk-name">Амен-ритм</span><span id="brk-len">включите питание</span></div>
+      </div>
+      <div class="brk-side">
+        <div class="knobs" id="brk-knobs"></div>
+        <button class="stutter" type="button" id="stutter" title="Держите, чтобы повторять текущий шаг дробью 1/32">Статтер<small>держать · Q</small></button>
+        <div class="side-row">
+          <button class="btn hot" type="button" id="grind">Перемолоть</button>
+          <button class="btn" type="button" id="straight">По порядку</button>
+        </div>
+        <div class="side-row">
+          <button class="btn" type="button" id="rnd-drums">Случайный ритм</button>
+          <button class="btn" type="button" id="brk-off">Убрать брейк</button>
+        </div>
+        <div class="side-row">
+          <button class="btn" type="button" id="brk-fit" aria-pressed="true">Подгонка</button>
+          <button class="btn danger" type="button" id="clear">Очистить банк</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="seq-scroll">
+      <div class="seq" id="seq-drums"></div>
+    </div>
+    <p class="hint">Клик в ряду «Брейк» листает номер куска 0–F, <kbd>Shift</kbd>-клик или правая кнопка мыши убирает кусок. «Дробь» повторяет шаг 2, 3 или 4 раза, «Шанс» решает, сыграет ли шаг вообще. Свой луп можно просто перетащить на этот модуль: файл остаётся в вашем браузере.</p>
+  </div>
+
+  <div class="device" id="synth" aria-label="Модуль 2, синтез и бас">
+    <span class="screws" aria-hidden="true"></span>
+    <span class="plate">Модуль 2 · <b>Синтез и бас</b></span>
+    <div class="syn-grid">
+      <div class="syn-left">
+        <div class="dev-top">
+          <div class="scope" aria-hidden="true">
+            <canvas id="scope"></canvas>
+            <div class="readout top"><span id="ro-wave">ПИЛА</span><span id="ro-mode">ДЕМО</span></div>
+            <div class="readout"><span id="ro-note">—</span><span id="ro-cut">СРЕЗ 1,4 кГц</span></div>
+          </div>
+          <div class="controls" id="controls"></div>
+        </div>
+        <div class="bar-row">
+          <div class="group" role="group" aria-label="Пресеты звука">
+            <span class="lamp" id="lamp-gate"></span>
+            <button class="preset" type="button" data-preset="acid">Кислота</button>
+            <button class="preset" type="button" data-preset="thund">Гром</button>
+            <button class="preset" type="button" data-preset="bass">Бас-79</button>
+            <button class="preset" type="button" data-preset="lead">Соло</button>
+            <button class="preset" type="button" data-preset="ether">Эфир</button>
+            <button class="preset" type="button" data-preset="pluck">Щипок</button>
+          </div>
+          <div class="group">
+            <span class="label">Октава</span>
+            <button class="btn" type="button" id="oct-down" aria-label="Октава ниже">−</button>
+            <span class="oct" id="oct">C2</span>
+            <button class="btn" type="button" id="oct-up" aria-label="Октава выше">+</button>
+          </div>
+        </div>
+        <div class="keys" id="keys" aria-label="Клавиатура"></div>
+        <p class="hint"><kbd>A</kbd>–<kbd>K</kbd> — ноты, <kbd>W</kbd> <kbd>E</kbd> <kbd>T</kbd> <kbd>Y</kbd> <kbd>U</kbd> — диезы, <kbd>Z</kbd>/<kbd>X</kbd> — октава. Ручки: перетаскивание вверх-вниз, колесо или стрелки, с <kbd>Shift</kbd> точнее, двойной клик — сброс.</p>
+      </div>
+      <div class="syn-right">
+        <div class="roll-head">
+          <span class="label">Басовая линия · банк <b id="roll-bank">A</b></span>
+          <div class="group">
+            <div class="knobs" id="syn-mix"></div>
+            <button class="btn" type="button" id="rnd-bass">Случайный бас</button>
+            <button class="btn" type="button" id="mutate">Мутация</button>
+          </div>
+        </div>
+        <div class="seq-scroll">
+          <div class="seq" id="seq-notes"></div>
+        </div>
+        <p class="hint">Янтарная решётка — ноты, «Акц» делает шаг громче и ярче, «Слайд» плавно связывает его со следующим.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bank-strip">
+    <span class="label">Код банка <b id="code-bank">A</b></span>
+    <div class="code-row">
+      <label class="sr-only" for="code">Код паттерна</label>
+      <input id="code" spellcheck="false" autocomplete="off" placeholder="Вставьте код Q7-…">
+      <button class="tb-btn" type="button" id="copy">Копировать код</button>
+      <button class="tb-btn" type="button" id="load">Загрузить</button>
+    </div>
+    <p class="msg" id="msg" role="status"></p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="passport">
+    <div class="sec-head">
+      <div class="label">Раздел 2</div>
+      <div>
+        <h2>Технический паспорт</h2>
+        <p>Характеристики концепта. На странице звук моделирует Web Audio вашего браузера: генератор, фильтр, огибающая, ударные и брейки из библиотеки синтезируются в реальном времени, без чужих записей.</p>
+      </div>
+    </div>
+    <div class="passport">
+      <table>
+        <thead><tr><th>П.</th><th>Параметр</th><th>Значение</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">Модуль 2 · Синтез</td></tr>
+          <tr><td>2.1</td><td>Формы сигнала ГУН</td><td>пила, меандр, треугольник, синус</td></tr>
+          <tr><td>2.2</td><td>Диапазон частот</td><td>16,35 Гц … 16,7 кГц (C0 … C10)</td></tr>
+          <tr><td>2.3</td><td>Фильтр</td><td>ФНЧ, 24 дБ/окт, срез 60 Гц … 12 кГц, Q до 20</td></tr>
+          <tr><td>2.4</td><td>Огибающая AR</td><td>атака 2 мс … 2 с, затухание 20 мс … 3 с</td></tr>
+          <tr><td>2.5</td><td>Портаменто</td><td>0 … 500 мс, экспоненциальное</td></tr>
+          <tr><td>2.6</td><td>Эффекты</td><td>драйв (мягкое ограничение), дилей 3/16 с синхронизацией</td></tr>
+          <tr class="grp"><td colspan="3">Модуль 1 · Ритм</td></tr>
+          <tr><td>2.7</td><td>Секвенсор</td><td>16 шагов, 4 банка, акцент и слайд на шаг</td></tr>
+          <tr><td>2.8</td><td>Темп</td><td>70 … 300 BPM, свинг 0 … 60 %</td></tr>
+          <tr><td>2.9</td><td>Голоса ритма</td><td>бочка, снейр, клэп, закрытый и открытый хэт</td></tr>
+          <tr><td>2.10</td><td>Дробь и шанс</td><td>×1 … ×4 на шаг; вероятность 100 / 75 / 50 / 25 %</td></tr>
+          <tr class="grp"><td colspan="3">Модуль 1 · Брейк</td></tr>
+          <tr><td>2.11</td><td>Слайсер</td><td>16 кусков, реверс на шаг, подгонка под темп</td></tr>
+          <tr><td>2.11а</td><td>Библиотека</td><td>6 брейков, синтезированных заново: 100 … 200 BPM</td></tr>
+          <tr><td>2.12</td><td>Статтер</td><td>повтор шага дробью 1/32, пока кнопка нажата</td></tr>
+          <tr><td>2.13</td><td>Грязь</td><td>насыщение и понижение разрядности 16 → 3 бит</td></tr>
+          <tr><td>2.14</td><td>Код паттерна</td><td>58 байт, base32, префикс Q7-</td></tr>
+          <tr class="grp"><td colspan="3">Корпус</td></tr>
+          <tr><td>2.15</td><td>Выходы</td><td>линейный 0 dBu 6,3 мм; CV/Gate 0 … 5 В, 3,5 мм</td></tr>
+          <tr><td>2.16</td><td>Питание</td><td>12 В пост. тока, 800 мА</td></tr>
+          <tr><td>2.17</td><td>Габариты, масса</td><td>320 × 180 × 62 мм, 2,4 кг</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="doc-foot">
+      <span class="label">ПЛТ.467-007 ПС</span>
+      <span class="label">Лист 2 из 6</span>
+    </div>
+  </section>
+
+  <section id="chain">
+    <div class="sec-head">
+      <div class="label">Раздел 3</div>
+      <div>
+        <h2>Путь сигнала</h2>
+        <p>Синтез проходит пять каскадов по порядку. Ритм и брейк идут мимо драйва и дилея через свой блок «грязи», поэтому бочка остаётся плотной при любых эффектах синта.</p>
+      </div>
+    </div>
+    <div class="chain">
+      <svg viewBox="0 0 880 250" role="img" aria-label="Схема: ГУН, фильтр, усилитель, драйв, дилей, выход. Огибающая управляет фильтром и усилителем. Ритм-16 подключён к выходу напрямую.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e4ece6"/></marker>
+          <marker id="ar-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ff4122"/></marker>
+          <marker id="ar-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ffae2b"/></marker>
+        </defs>
+        <text x="20" y="22" font-family="IBM Plex Mono, monospace" font-size="11" fill="#7f8f86">КЛАВИАТУРА / СЕКВЕНСОР → 1 В/окт</text>
+        <path d="M70 30 V66" stroke="#e4ece6" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+        <g font-family="Tektur, Arial, sans-serif" font-weight="700" font-size="18" text-anchor="middle">
+          <rect x="20" y="70" width="100" height="60" rx="3" fill="#0a0e0c" stroke="#e4ece6" stroke-width="1.5"/><text x="70" y="106" fill="#e4ece6">ГУН</text>
+          <rect x="160" y="70" width="120" height="60" rx="3" fill="#0a0e0c" stroke="#e4ece6" stroke-width="1.5"/><text x="220" y="106" fill="#e4ece6">ФНЧ 24</text>
+          <rect x="320" y="70" width="100" height="60" rx="3" fill="#0a0e0c" stroke="#e4ece6" stroke-width="1.5"/><text x="370" y="106" fill="#e4ece6">УНЧ</text>
+          <rect x="460" y="70" width="100" height="60" rx="3" fill="#0a0e0c" stroke="#e4ece6" stroke-width="1.5"/><text x="510" y="106" fill="#e4ece6">ДРАЙВ</text>
+          <rect x="600" y="70" width="100" height="60" rx="3" fill="#0a0e0c" stroke="#e4ece6" stroke-width="1.5"/><text x="650" y="106" fill="#e4ece6">ДИЛЕЙ</text>
+          <rect x="740" y="70" width="120" height="60" rx="30" fill="#e4ece6"/><text x="800" y="106" fill="#0a0e0c" font-size="16">ВЫХОД</text>
+          <rect x="180" y="180" width="200" height="46" rx="3" fill="#ff4122"/><text x="280" y="209" fill="#160604" font-size="16">ОГИБАЮЩАЯ</text>
+          <rect x="560" y="180" width="180" height="46" rx="3" fill="#ffae2b"/><text x="650" y="209" fill="#160604" font-size="16">РИТМ · БРЕЙК</text>
+        </g>
+        <g stroke="#e4ece6" stroke-width="1.5" fill="none">
+          <path d="M120 100 H156" marker-end="url(#ar)"/>
+          <path d="M280 100 H316" marker-end="url(#ar)"/>
+          <path d="M420 100 H456" marker-end="url(#ar)"/>
+          <path d="M560 100 H596" marker-end="url(#ar)"/>
+          <path d="M700 100 H736" marker-end="url(#ar)"/>
+        </g>
+        <g stroke="#ff4122" stroke-width="1.5" fill="none" stroke-dasharray="4 4">
+          <path d="M220 180 V134" marker-end="url(#ar-r)"/>
+          <path d="M360 180 V134" marker-end="url(#ar-r)"/>
+        </g>
+        <path d="M740 203 H800 V134" stroke="#ffae2b" stroke-width="1.5" fill="none" marker-end="url(#ar-a)"/>
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#7f8f86" text-anchor="middle">
+          <text x="70" y="152">форма · глайд</text>
+          <text x="250" y="152">срез · резонанс</text>
+          <text x="400" y="152">громкость</text>
+          <text x="510" y="152">насыщение</text>
+          <text x="650" y="152">3/16 · обр. связь</text>
+          <text x="280" y="244" font-size="10">атака · затухание · акцент</text>
+          <text x="650" y="244" font-size="10">грязь · мимо дилея</text>
+        </g>
+      </svg>
+    </div>
+    <div class="chain-notes">
+      <div><span class="label">Каскад 1</span><h3>ГУН</h3><p>Один генератор с четырьмя формами. Слайд между шагами плавно тянет высоту, как на старых басовых машинах.</p></div>
+      <div><span class="label">Каскады 2–3</span><h3>Фильтр и УНЧ</h3><p>Четыре звена по 6 дБ/окт. Огибающая открывает фильтр на каждой ноте, акцент открывает его сильнее и громче.</p></div>
+      <div><span class="label">Каскады 4–5</span><h3>Драйв и дилей</h3><p>Драйв мягко срезает пики, дилей повторяет звук через 3/16 такта и сам подстраивается под темп.</p></div>
+      <div><span class="label">Параллельно</span><h3>Ритм и брейк</h3><p>Пять голосов из шума и синуса плюс слайсер. Встроенный брейк собирается из тех же голосов при включении питания.</p></div>
+    </div>
+  </section>
+
+  <section id="manual">
+    <div class="sec-head">
+      <div class="label">Раздел 4</div>
+      <div>
+        <h2>Мануал</h2>
+        <p>Паттерны сохраняются в вашем браузере автоматически. Чтобы поделиться треком, скопируйте код паттерна и отправьте его кому угодно.</p>
+      </div>
+    </div>
+    <div class="manual">
+      <div>
+        <h3>Первый паттерн за минуту</h3>
+        <ol class="steps">
+          <li><span><b>Нажмите «Брейкор · 190» наверху.</b> Включится банк D: нарезанный брейк, дроби в конце такта и грязный бас. «Техно · 128» включает банк A.</span></li>
+          <li><span><b>Крутите «Срез» и «Резонанс»</b>, пока паттерн играет. Это главный инструмент техно.</span></li>
+          <li><span><b>Кликайте по сетке.</b> Красные ряды — ритм, янтарная решётка — ноты баса. «Акц» делает шаг громче, «Слайд» связывает его со следующим.</span></li>
+          <li><span><b>Выберите брейк в библиотеке и нажмите «Перемолоть».</b> Каждое нажатие режет брейк по-новому. Держите <kbd>Q</kbd> для статтера.</span></li>
+          <li><span><b>Включите «Запись»</b> и играйте на клавишах: ноты встанут на ближайший шаг.</span></li>
+          <li><span><b>Переключайте банки A–D.</b> Новый банк начнёт играть с начала следующего такта.</span></li>
+          <li><span><b>Скопируйте код</b> и отправьте другу. Он вставит его в поле и услышит то же самое.</span></li>
+        </ol>
+      </div>
+      <div>
+        <h3>Горячие клавиши</h3>
+        <dl class="hotkeys">
+          <dt>Пробел</dt><dd>старт / стоп</dd>
+          <dt>A S D F G H J K</dt><dd>белые клавиши, от C до C</dd>
+          <dt>W E T Y U</dt><dd>чёрные клавиши</dd>
+          <dt>Z / X</dt><dd>октава ниже / выше</dd>
+          <dt>1 2 3 4</dt><dd>банк A, B, C, D</dd>
+          <dt>R</dt><dd>запись вкл / выкл</dd>
+          <dt>Q (держать)</dt><dd>статтер: повтор шага дробью 1/32</dd>
+          <dt>Shift-клик</dt><dd>убрать кусок брейка с шага</dd>
+          <dt>↑ ↓ на ручке</dt><dd>изменить значение, PgUp/PgDn — крупно</dd>
+          <dt>Двойной клик</dt><dd>вернуть ручку по умолчанию</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Квант-7 — концепт вымышленного завода «Полутон». Сайт не ставит cookie, ничего не собирает и не требует регистрации.</span>
+    <div class="badges" aria-hidden="true">
+      <span class="b88"><b>КВАНТ-7</b>лучше в наушниках</span>
+      <span class="b88 amber"><b>AMEN?</b>режь свой</span>
+      <span class="b88"><b>0 COOKIE</b>честный сайт</span>
+    </div>
+  </footer>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>
